@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Little Surprise – Make a Digital Gift with a QR Card</title>
+<meta name="description" content="Write a message, pick a theme, and get a QR card to give to someone special. Free, no sign-up.">
+<meta name="theme-color" content="#ffe3ee">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Little Surprise 💌">
+<meta property="og:description" content="Turn a message into a little digital gift with a QR card. Free, no sign-up.">
+<!-- Add after publishing: <meta property="og:image" content="https://YOUR-SITE/og-image.png"> (1200x630 image) -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!-- QR library first, then our script (both deferred, so they run in this order) -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+
+<!-- CREATOR: what the person making the gift sees -->
+<div id="creator">
+  <a class="skip" href="#make">Skip to the form</a>
+  <header class="hero">
+    <div class="big" aria-hidden="true">💌</div>
+    <h1>Create a Little Surprise</h1>
+    <p class="sub">Turn a message into a little digital gift.</p>
+    <a class="btn main go" href="#make">Create a Gift</a>
+    <ol class="how" aria-label="How it works">
+      <li>Create your gift</li><li>Get your QR card</li><li>Give it to someone</li><li>They scan it</li><li>They open your surprise</li>
+    </ol>
+  </header>
+
+  <main id="make" class="make">
+    <div id="build" class="build">
+      <form id="form" class="panel" novalidate>
+        <p id="notice" class="notice hidden" role="status"></p>
+
+        <label for="occ">Occasion</label>
+        <select id="occ"></select>
+
+        <fieldset><legend>Theme</legend><div id="themes" class="themes"></div></fieldset>
+
+        <label for="rec">Recipient name</label>
+        <input id="rec" maxlength="40" placeholder="Who is it for?" autocomplete="off">
+
+        <label for="msg">Your message</label>
+        <div id="ideas" class="chips" aria-label="Message ideas"></div>
+        <textarea id="msg" maxlength="250" placeholder="Write your message here..."></textarea>
+        <p class="hint"><span id="cnt">0</span>/250. A shorter message makes a QR code that is easier to scan.</p>
+
+        <label for="snd">Your name</label>
+        <input id="snd" maxlength="40" placeholder="Your name" autocomplete="off">
+
+        <p id="err" class="err" role="alert"></p>
+        <button class="btn main" type="submit">Create My Gift 💌</button>
+        <p class="note">🔓 Anyone with the gift link or QR code can view the message. Please don't include passwords, private information, or secrets.</p>
+      </form>
+
+      <aside class="pvwrap" aria-label="Live preview">
+        <h2 class="pvt">Live preview</h2>
+        <article class="letter small">
+          <div id="pvDeco" class="deco" aria-hidden="true"></div>
+          <p id="pvDear" class="dear"></p>
+          <p id="pvBody" class="body"></p>
+          <p id="pvSign" class="sign show"></p>
+        </article>
+      </aside>
+    </div>
+
+    <section id="result" class="hidden">
+      <h2 class="ready">Your gift is ready! 🎁</h2>
+      <fieldset class="panel"><legend>Card style</legend><div id="styles" class="themes four"></div></fieldset>
+
+      <!-- This card is the only thing that prints -->
+      <div id="card" class="qrcard">
+        <div id="cTop" class="cdeco" aria-hidden="true"></div>
+        <div id="cEmoji" class="big" aria-hidden="true">💌</div>
+        <h3>A little surprise<br>for you</h3>
+        <div id="qr" class="qrbox"></div>
+        <p class="scan">SCAN ME</p>
+        <p class="give">Someone made this just for you.</p>
+        <div id="cBot" class="cdeco" aria-hidden="true"></div>
+      </div>
+
+      <div class="panel">
+        <label for="link">Gift link</label>
+        <input id="link" readonly>
+        <div class="row">
+          <button id="copy" class="btn" type="button">Copy Link</button>
+          <button id="prev" class="btn" type="button">Preview Gift</button>
+        </div>
+        <button id="share" class="btn" type="button" style="margin-top:10px">Share Link</button>
+        <button id="save" class="btn main" type="button">Save Card as Image</button>
+        <button id="print" class="btn" type="button" style="margin-top:10px">Print QR Card</button>
+        <p class="note">For best results, print at actual size (at least 5 cm wide) and test the QR code with your phone before giving it to someone. Just point your camera at it.</p>
+        <p class="note">🔓 Anyone with this link or QR code can read the message.</p>
+        <button id="again" class="btn ghost" type="button">Edit or make another gift</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="support">
+    <p class="sh">Enjoyed making a little surprise?</p>
+    <p>If you did, you can follow me on Facebook/Tiktok to support this project. Thank you! ❤️</p>
+    <a class="btn fb" href="https://www.facebook.com/alvinmoreno2008" target="_blank" rel="noopener noreferrer">Follow me on Facebook</a>
+    <a class="btn fb" href="https://www.tiktok.com/@samsepi0l0l0?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">Follow me on Tiktok</a>
+  </footer>
+</div>
+
+<!-- RECEIVER: what the person scanning the QR code sees -->
+<section id="receiver" class="hidden">
+  <button id="back" class="btn ghost hidden" type="button">← Back to creator</button>
+  <div id="stage">
+    <div id="intro">
+      <div id="env" class="env" aria-hidden="true"><div class="flap"></div><span id="pop" class="seal">💌</span></div>
+      <h2 id="rTitle"></h2>
+      <p id="rSub" class="sub"></p>
+      <button id="open" class="btn main" type="button">Open Gift</button>
+    </div>
+    <article id="letter" class="letter hidden" aria-live="polite">
+      <p id="rOcc" class="badge"></p>
+      <div id="deco" class="deco" aria-hidden="true"></div>
+      <p id="rDear" class="dear"></p>
+      <p class="body"><span id="t1"></span><span id="t2" class="ghost"></span></p>
+      <p id="rSign" class="sign"></p>
+      <div id="after" class="hidden">
+        <button id="mine" class="btn cta" type="button">Make a surprise of your own 💌</button>
+        <button id="replay" class="btn ghost" type="button">Watch again ↺</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+</body>
+</html>
