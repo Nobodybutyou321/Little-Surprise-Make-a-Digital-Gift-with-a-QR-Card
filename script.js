@@ -820,64 +820,52 @@
     });
   }
 
-  $("save").onclick = function () {
-    var b = this;
-    var label = b.textContent;
+$("save").onclick = function () {
+  var b = this;
+  var label = b.textContent;
 
-    b.textContent = "Making image…";
+  b.disabled = true;
+  b.textContent = "Preparing download…";
 
-    cardBlob($("link").value)
-      .then(function (blob) {
-        var f = new File(
-          [blob],
-          "little-surprise-card.png",
-          {
-            type: "image/png"
-          }
-        );
+  cardBlob($("link").value)
+    .then(function (blob) {
+      if (!blob) {
+        throw new Error("Could not create image.");
+      }
 
-        if (
-          navigator.canShare &&
-          navigator.canShare({
-            files: [f]
-          }) &&
-          matchMedia(
-            "(pointer:coarse)"
-          ).matches
-        ) {
-          return navigator.share({
-            files: [f]
-          });
-        }
+      var fileName = "little-surprise-card.png";
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      a.style.display = "none";
 
-        var a =
-          document.createElement("a");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
 
-        a.href =
-          URL.createObjectURL(blob);
+      setTimeout(function () {
+        URL.revokeObjectURL(url);
+      }, 5000);
 
-        a.download = f.name;
+      b.textContent = "Downloaded ✓";
 
-        document.body.appendChild(a);
-
-        a.click();
-
-        a.remove();
-
-        setTimeout(function () {
-          URL.revokeObjectURL(a.href);
-        }, 4000);
-      })
-      .catch(function (e) {
-        console.error(
-          "Could not save card:",
-          e
-        );
-      })
-      .then(function () {
+      setTimeout(function () {
         b.textContent = label;
-      });
-  };
+        b.disabled = false;
+      }, 1800);
+    })
+    .catch(function (e) {
+      console.error("Could not download card:", e);
+
+      b.textContent = "Download failed";
+
+      setTimeout(function () {
+        b.textContent = label;
+        b.disabled = false;
+      }, 1800);
+    });
+};
 
   function fall(list, count) {
     if (reduce) return;
