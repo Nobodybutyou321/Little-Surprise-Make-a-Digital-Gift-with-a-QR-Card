@@ -1,7 +1,7 @@
 (function () {
   "use strict";
   var $ = function (id) { return document.getElementById(id); };
-  var MSG_MAX = 250, NAME_MAX = 40;
+  var MSG_MAX = 1000, NAME_MAX = 40;
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ---- THEMES: name, emoji, decorations, accent, 3 background colors, receiver title, receiver subtitle, dark? ----
