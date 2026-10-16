@@ -107,10 +107,8 @@
     var json = JSON.stringify(obj);
     var plaintext = new TextEncoder().encode(json);
 
-    // 256-bit random encryption key
     var keyBytes = crypto.getRandomValues(new Uint8Array(32));
 
-    // 96-bit random IV, recommended size for AES-GCM
     var iv = crypto.getRandomValues(new Uint8Array(12));
 
     var key = await crypto.subtle.importKey(
@@ -217,7 +215,6 @@
 
   async function parseGift(code) {
     try {
-      // New encrypted format
       if (code.indexOf("v3.") === 0) {
         var encryptedGift = await decryptGift(code);
 
@@ -235,7 +232,8 @@
           m: encryptedGift.m.slice(0, MSG_MAX),
           s: String(encryptedGift.s || "").slice(0, NAME_MAX),
           t: THEMES[encryptedGift.t] ? encryptedGift.t : "flowers",
-          o: OCC[encryptedGift.o] ? encryptedGift.o : "custom"
+          o: OCC[encryptedGift.o] ? encryptedGift.o : "custom",
+          p: window.GiftMedia ? GiftMedia.clean(encryptedGift.p) : ""
         };
       }
 
@@ -475,7 +473,8 @@
         m: m,
         s: s,
         t: st.theme,
-        o: st.occ
+        o: st.occ,
+        p: window.GiftMedia ? GiftMedia.get() : ""
       };
 
       var encrypted = await encryptGift(giftData);
@@ -908,6 +907,7 @@ $("save").onclick = function () {
     var chars = Array.from(g.m);
 
     current = g;
+    if (window.GiftMedia) GiftMedia.show(g.p);
 
     applyTheme(g.t);
 
@@ -1055,7 +1055,7 @@ $("save").onclick = function () {
     );
 
     document.title =
-      "Little Surprise – Make a Digital Gift with a QR Card";
+      "Make a Digital Gift with a QR Card";
   }
 
   async function route() {
@@ -1075,11 +1075,6 @@ $("save").onclick = function () {
       return;
     }
 
-    /*
-      Decryption happens locally.
-
-      The encrypted gift is never sent to a server.
-    */
 
     var g = await parseGift(m[1]);
 
