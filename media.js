@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-
+  
   var CLOUD_NAME = "mnjk6qu9";
   var UPLOAD_PRESET = "little_surprise";
 
